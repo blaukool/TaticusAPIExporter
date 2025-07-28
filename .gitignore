@@ -39,3 +39,4 @@ build/
 /.claude/
 /.mvn/
 /.idea/
+src/main/resources/userMapping.properties
