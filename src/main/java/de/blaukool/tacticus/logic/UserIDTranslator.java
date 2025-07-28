@@ -14,7 +14,7 @@ public class UserIDTranslator {
         this.userIdToNameMap = loadUserMappings();
     }
 
-    private Map<String, String> loadUserMappings() {
+    protected Map<String, String> loadUserMappings() {
         Map<String, String> mappings = new HashMap<>();
         
         try (InputStream inputStream = getClass().getResourceAsStream(USER_MAPPING_FILE)) {

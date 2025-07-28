@@ -9,7 +9,6 @@ import org.apache.http.util.EntityUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import de.blaukool.tacticus.api.PlayerResponse;
 import de.blaukool.tacticus.api.GuildResponse;
 import de.blaukool.tacticus.api.GuildRaidResponse;
 import de.blaukool.tacticus.logic.MemberContribution;
