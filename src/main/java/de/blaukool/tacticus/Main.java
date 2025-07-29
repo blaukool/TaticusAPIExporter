@@ -36,6 +36,7 @@ public class Main {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             // Step 1: Call guild data API and create base member data
             Map<String, String> memberNames = new HashMap<>();
+            Map<String, String> memberRoles = new HashMap<>();
             List<Integer> guildRaidSeasons = new ArrayList<>();
             
             GuildResponse guildResponse = makeApiCall(httpClient, "/api/v1/guild", api_key, "Guild Data", GuildResponse.class, objectMapper);
@@ -45,10 +46,11 @@ public class Main {
                 System.out.println("Guild Level: " + guildResponse.getGuild().getLevel());
                 System.out.println("Members Count: " + (guildResponse.getGuild().getMembers() != null ? guildResponse.getGuild().getMembers().size() : 0));
                 
-                // Store member names for later use
+                // Store member names and roles for later use
                 if (guildResponse.getGuild().getMembers() != null) {
                     for (GuildResponse.GuildMember member : guildResponse.getGuild().getMembers()) {
                         memberNames.put(member.getUserId(), member.getName());
+                        memberRoles.put(member.getUserId(), member.getRole());
                     }
                 }
                 
@@ -67,7 +69,13 @@ public class Main {
                 for (Map.Entry<String, String> entry : memberNames.entrySet()) {
                     MemberContribution contribution = new MemberContribution();
                     contribution.setName(entry.getValue());
-                    contribution.setDamage(0);
+                    contribution.setRole(memberRoles.get(entry.getKey()));
+                    contribution.setBossBattle(0);
+                    contribution.setSidebossBattle(0);
+                    contribution.setBossBomb(0);
+                    contribution.setSidebossBomb(0);
+                    contribution.setBattleCount(0);
+                    contribution.setBombCount(0);
                     memberContributions.put(entry.getKey(), contribution);
                 }
                 
@@ -82,10 +90,24 @@ public class Main {
                         for (GuildRaidResponse.Raid raid : guildRaidResponse.getEntries()) {
                             String userId = raid.getUserId();
                             int damage = raid.getDamageDealt();
+                            String encounterType = raid.getEncounterType();
+                            String damageType = raid.getDamageType();
                             
                             MemberContribution contribution = memberContributions.get(userId);
                             if (contribution != null) {
-                                contribution.addDamage(damage);
+                                if ("Boss".equals(encounterType) && "Battle".equals(damageType)) {
+                                    contribution.addBossBattle(damage);
+                                    contribution.incrementBattleCount();
+                                } else if ("Boss".equals(encounterType) && "Bomb".equals(damageType)) {
+                                    contribution.addBossBomb(damage);
+                                    contribution.incrementBombCount();
+                                } else if ("SideBoss".equals(encounterType) && "Battle".equals(damageType)) {
+                                    contribution.addSidebossBattle(damage);
+                                    contribution.incrementBattleCount();
+                                } else if ("SideBoss".equals(encounterType) && "Bomb".equals(damageType)) {
+                                    contribution.addSidebossBomb(damage);
+                                    contribution.incrementBombCount();
+                                }
                             }
                         }
                     }
@@ -93,19 +115,34 @@ public class Main {
                     // Step 3: Print the list of member contributions for this season
                     System.out.println("\n=== Guild Raid Season " + season + " Member Contributions ===");
                     List<MemberContribution> sortedContributions = new ArrayList<>(memberContributions.values());
-                    sortedContributions.sort((a, b) -> b.getDamage().compareTo(a.getDamage())); // Sort by damage descending
+                    // Sort by total damage (sum of all contribution types) descending
+                    sortedContributions.sort((a, b) -> {
+                        int totalA = a.getBossBattle() + a.getBossBomb() + a.getSidebossBattle() + a.getSidebossBomb();
+                        int totalB = b.getBossBattle() + b.getBossBomb() + b.getSidebossBattle() + b.getSidebossBomb();
+                        return Integer.compare(totalB, totalA);
+                    });
                     
                     // Print table header
-                    System.out.println(String.format("%-4s %-20s %15s", "Rank", "Member Name", "Total Damage"));
-                    System.out.println("─".repeat(43));
+                    System.out.println(String.format("%-4s %-15s %-10s %12s %12s %12s %12s %12s %8s %8s", 
+                        "Rank", "Member Name", "Role", "Boss Battle", "Boss Bomb", "Sideb. Battle", "Sideb. Bomb", "Total", "Battles", "Bombs"));
+                    System.out.println("─".repeat(125));
                     
                     // Print table rows
                     int rank = 1;
                     for (MemberContribution contribution : sortedContributions) {
-                        System.out.println(String.format("%-4d %-20s %,15d", 
+                        int total = contribution.getBossBattle() + contribution.getBossBomb() + 
+                                   contribution.getSidebossBattle() + contribution.getSidebossBomb();
+                        System.out.println(String.format("%-4d %-15s %-10s %,12d %,12d %,12d %,12d %,12d %8d %8d", 
                             rank, 
-                            contribution.getName().length() > 20 ? contribution.getName().substring(0, 17) + "..." : contribution.getName(),
-                            contribution.getDamage()));
+                            contribution.getName().length() > 15 ? contribution.getName().substring(0, 12) + "..." : contribution.getName(),
+                            contribution.getRole() != null ? contribution.getRole() : "N/A",
+                            contribution.getBossBattle(),
+                            contribution.getBossBomb(),
+                            contribution.getSidebossBattle(),
+                            contribution.getSidebossBomb(),
+                            total,
+                            contribution.getBattleCount(),
+                            contribution.getBombCount()));
                         rank++;
                     }
                     System.out.println(); // Add blank line between seasons
