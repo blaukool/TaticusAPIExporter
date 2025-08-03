@@ -1,6 +1,6 @@
 package de.blaukool.tacticus.api;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class GuildRaidResponse {
@@ -28,8 +28,8 @@ public class GuildRaidResponse {
         private String rarity;
         private int damageDealt;
         private String damageType;
-        private OffsetDateTime startedOn;
-        private OffsetDateTime completedOn;
+        private Date startedOn;
+        private Date completedOn;
         private List<PublicHeroDetail> heroDetails;
         private PublicHeroDetail machineOfWarDetails;
         private String globalConfigHash;
@@ -58,10 +58,10 @@ public class GuildRaidResponse {
         public void setDamageDealt(int damageDealt) { this.damageDealt = damageDealt; }
         public String getDamageType() { return damageType; }
         public void setDamageType(String damageType) { this.damageType = damageType; }
-        public OffsetDateTime getStartedOn() { return startedOn; }
-        public void setStartedOn(OffsetDateTime startedOn) { this.startedOn = startedOn; }
-        public OffsetDateTime getCompletedOn() { return completedOn; }
-        public void setCompletedOn(OffsetDateTime completedOn) { this.completedOn = completedOn; }
+        public Date getStartedOn() { return startedOn; }
+        public void setStartedOn(Date startedOn) { this.startedOn = startedOn; }
+        public Date getCompletedOn() { return completedOn; }
+        public void setCompletedOn(Date completedOn) { this.completedOn = completedOn; }
         public List<PublicHeroDetail> getHeroDetails() { return heroDetails; }
         public void setHeroDetails(List<PublicHeroDetail> heroDetails) { this.heroDetails = heroDetails; }
         public PublicHeroDetail getMachineOfWarDetails() { return machineOfWarDetails; }

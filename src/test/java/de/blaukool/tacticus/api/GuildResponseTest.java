@@ -1,6 +1,5 @@
 package de.blaukool.tacticus.api;
 
-import de.blaukool.tacticus.logic.UserIDTranslator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
