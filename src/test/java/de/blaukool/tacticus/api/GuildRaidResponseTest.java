@@ -3,7 +3,7 @@ package de.blaukool.tacticus.api;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -51,8 +51,8 @@ public class GuildRaidResponseTest {
         String rarity = "Epic";
         int damageDealt = 5000;
         String damageType = "Battle";
-        OffsetDateTime startedOn = OffsetDateTime.now();
-        OffsetDateTime completedOn = startedOn.plusMinutes(30);
+        Date startedOn = new Date();
+        Date completedOn = new Date(startedOn.getTime() + 30 * 60 * 1000);
         String globalConfigHash = "config-hash-123";
         
         raid.setUserId(userId);
@@ -279,20 +279,20 @@ public class GuildRaidResponseTest {
     @Test
     public void testTimestampHandling() {
         // Test timestamp handling
-        OffsetDateTime now = OffsetDateTime.now();
-        OffsetDateTime past = now.minusHours(2);
-        OffsetDateTime future = now.plusHours(1);
+        Date now = new Date();
+        Date past = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+        Date future = new Date(now.getTime() + 1 * 60 * 60 * 1000);
         
         raid.setStartedOn(past);
         raid.setCompletedOn(now);
         
         assertEquals(past, raid.getStartedOn());
         assertEquals(now, raid.getCompletedOn());
-        assertTrue(raid.getStartedOn().isBefore(raid.getCompletedOn()));
+        assertTrue(raid.getStartedOn().before(raid.getCompletedOn()));
         
         // Test with future timestamp
         raid.setCompletedOn(future);
-        assertTrue(raid.getCompletedOn().isAfter(raid.getStartedOn()));
+        assertTrue(raid.getCompletedOn().after(raid.getStartedOn()));
     }
 
     @Test
@@ -314,8 +314,8 @@ public class GuildRaidResponseTest {
         completeRaid.setRarity("Legendary");
         completeRaid.setDamageDealt(17500);
         completeRaid.setDamageType("Battle");
-        completeRaid.setStartedOn(OffsetDateTime.now().minusHours(1));
-        completeRaid.setCompletedOn(OffsetDateTime.now());
+        completeRaid.setStartedOn(new Date(System.currentTimeMillis() - 60 * 60 * 1000));
+        completeRaid.setCompletedOn(new Date());
         completeRaid.setGlobalConfigHash("complete-config-hash");
         
         GuildRaidResponse.PublicHeroDetail hero1 = new GuildRaidResponse.PublicHeroDetail();

@@ -1,8 +1,10 @@
 package de.blaukool.tacticus.api;
 
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import de.blaukool.tacticus.logic.UserIDTranslator;
 
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class GuildResponse {
@@ -37,7 +39,7 @@ public class GuildResponse {
         private String userId;
         private String role;
         private int level;
-        private OffsetDateTime lastActivityOn;
+        private Date lastActivityOn;
         private static final UserIDTranslator userIdTranslator = new UserIDTranslator();
 
         public String getUserId() { return userId; }
@@ -46,8 +48,8 @@ public class GuildResponse {
         public void setRole(String role) { this.role = role; }
         public int getLevel() { return level; }
         public void setLevel(int level) { this.level = level; }
-        public OffsetDateTime getLastActivityOn() { return lastActivityOn; }
-        public void setLastActivityOn(OffsetDateTime lastActivityOn) { this.lastActivityOn = lastActivityOn; }
+        public Date getLastActivityOn() { return lastActivityOn; }
+        public void setLastActivityOn(Date lastActivityOn) { this.lastActivityOn = lastActivityOn; }
         
         public String getName() {
             String name = userIdTranslator.getUserName(userId);

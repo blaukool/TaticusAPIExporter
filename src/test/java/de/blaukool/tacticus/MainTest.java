@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,7 +104,7 @@ public class MainTest {
         mockMember.setUserId("test-user-id");
         mockMember.setRole("LEADER");
         mockMember.setLevel(50);
-        mockMember.setLastActivityOn(OffsetDateTime.now());
+        mockMember.setLastActivityOn(new Date());
         mockGuild.setMembers(Arrays.asList(mockMember));
         
         GuildResponse mockGuildResponse = new GuildResponse();

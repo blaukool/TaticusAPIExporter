@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,7 +60,7 @@ public class GuildResponseTest {
         String userId = "test-user-id";
         String role = "LEADER";
         int level = 50;
-        OffsetDateTime lastActivity = OffsetDateTime.now();
+        Date lastActivity = new Date();
         
         guildMember.setUserId(userId);
         guildMember.setRole(role);
@@ -235,13 +235,13 @@ public class GuildResponseTest {
         leader.setUserId("leader-id");
         leader.setRole("LEADER");
         leader.setLevel(60);
-        leader.setLastActivityOn(OffsetDateTime.now());
+        leader.setLastActivityOn(new Date());
         
         GuildResponse.GuildMember officer = new GuildResponse.GuildMember();
         officer.setUserId("officer-id");
         officer.setRole("OFFICER");
         officer.setLevel(52);
-        officer.setLastActivityOn(OffsetDateTime.now().minusHours(2));
+        officer.setLastActivityOn(new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000));
         
         guild.setMembers(Arrays.asList(leader, officer));
         guild.setGuildRaidSeasons(Arrays.asList(78, 79));
