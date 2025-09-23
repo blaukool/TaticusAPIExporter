@@ -1,7 +1,10 @@
 package de.blaukool.tacticus.api;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class GuildRaidResponse {
     private int season;
@@ -68,6 +71,25 @@ public class GuildRaidResponse {
         public void setMachineOfWarDetails(PublicHeroDetail machineOfWarDetails) { this.machineOfWarDetails = machineOfWarDetails; }
         public String getGlobalConfigHash() { return globalConfigHash; }
         public void setGlobalConfigHash(String globalConfigHash) { this.globalConfigHash = globalConfigHash; }
+
+        @Override
+        public String toString() {
+            return String.format("| %-10s | %-3d | %-20s | %-10s | %-25s | %,10d | %,10d |",
+                    rarity != null ? rarity : "",
+                    set + 1,
+                    type != null ? type : "",
+                    encounterType != null ? encounterType : "",
+                    getUnitIdFormated(),
+                    damageDealt,
+                    remainingHp);
+        }
+
+        public String getUnitIdFormated() {
+            StringTokenizer tokenizer = new StringTokenizer(unitId, "1234567890", false);
+            tokenizer.nextToken();
+            tokenizer.nextToken();
+            return  tokenizer.nextToken();
+        }
     }
 
     public static class PublicHeroDetail {
@@ -78,5 +100,10 @@ public class GuildRaidResponse {
         public void setUnitId(String unitId) { this.unitId = unitId; }
         public int getPower() { return power; }
         public void setPower(int power) { this.power = power; }
+
+        @Override
+        public String toString() {
+            return unitId;
+        }
     }
 }

@@ -1,5 +1,10 @@
 package de.blaukool.tacticus.logic;
 
+import de.blaukool.tacticus.api.GuildRaidResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MemberContribution {
     String name;
     String role;
@@ -9,6 +14,19 @@ public class MemberContribution {
     Integer sidebossBomb = 0;
     Integer battleCount = 0;
     Integer bombCount = 0;
+    List<GuildRaidResponse.Raid> raids = new ArrayList<GuildRaidResponse.Raid>();
+
+    public List<GuildRaidResponse.Raid> getRaids() {
+        return raids;
+    }
+
+    public void setRaids(List<GuildRaidResponse.Raid> raids) {
+        this.raids = raids;
+    }
+
+    public void addRaid(GuildRaidResponse.Raid raid){
+        raids.add(raid);
+    }
 
     public Integer getBossBattle() {
         return bossBattle;
@@ -97,5 +115,6 @@ public class MemberContribution {
     public void incrementBombCount() {
         this.bombCount++;
     }
+
 
 }
