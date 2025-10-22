@@ -16,7 +16,7 @@ public class Boss implements Comparable<Boss>{
         RARITIES.put("Rare", 3);
         RARITIES.put("Epic", 4);
         RARITIES.put("Legendary", 5);
-
+        RARITIES.put("Mythic", 6);
     }
 
     public Boss(String name, int number, String rarity) {
