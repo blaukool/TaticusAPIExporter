@@ -18,6 +18,7 @@ public class MemberContributionTest {
         // Test that default values are set correctly
         assertNull(memberContribution.getName());
         assertNull(memberContribution.getRole());
+        assertNull(memberContribution.getLevel());
         assertEquals(Integer.valueOf(0), memberContribution.getBossBattle());
         assertEquals(Integer.valueOf(0), memberContribution.getSidebossBattle());
         assertEquals(Integer.valueOf(0), memberContribution.getBossBomb());
@@ -178,18 +179,63 @@ public class MemberContributionTest {
     }
 
     @Test
+    public void testSetAndGetLevel() {
+        // Test setting and getting level
+        Integer testLevel = 50;
+        memberContribution.setLevel(testLevel);
+        assertEquals(testLevel, memberContribution.getLevel());
+    }
+
+    @Test
+    public void testSetAndGetLevel_Null() {
+        // Test setting null level
+        memberContribution.setLevel(null);
+        assertNull(memberContribution.getLevel());
+    }
+
+    @Test
+    public void testSetAndGetLevel_Zero() {
+        // Test setting zero level
+        Integer zeroLevel = 0;
+        memberContribution.setLevel(zeroLevel);
+        assertEquals(zeroLevel, memberContribution.getLevel());
+    }
+
+    @Test
+    public void testSetAndGetLevel_Negative() {
+        // Test setting negative level (edge case)
+        Integer negativeLevel = -1;
+        memberContribution.setLevel(negativeLevel);
+        assertEquals(negativeLevel, memberContribution.getLevel());
+    }
+
+    @Test
+    public void testSetAndGetLevel_MaxValue() {
+        // Test setting maximum level value
+        Integer maxLevel = Integer.MAX_VALUE;
+        memberContribution.setLevel(maxLevel);
+        assertEquals(maxLevel, memberContribution.getLevel());
+    }
+
+    @Test
     public void testCompleteWorkflow() {
         // Test a complete workflow
         String playerName = "TestPlayer";
+        String playerRole = "LEADER";
+        Integer playerLevel = 85;
         memberContribution.setName(playerName);
-        
+        memberContribution.setRole(playerRole);
+        memberContribution.setLevel(playerLevel);
+
         // Add multiple damage values
         memberContribution.addBossBattle(1000);
         memberContribution.addBossBattle(2500);
         memberContribution.addBossBattle(750);
-        
+
         // Verify final state
         assertEquals(playerName, memberContribution.getName());
+        assertEquals(playerRole, memberContribution.getRole());
+        assertEquals(playerLevel, memberContribution.getLevel());
         assertEquals(Integer.valueOf(4250), memberContribution.getBossBattle());
     }
 
@@ -397,25 +443,28 @@ public class MemberContributionTest {
         // Test complete workflow including counters
         String playerName = "CounterTestPlayer";
         String playerRole = "OFFICER";
+        Integer playerLevel = 92;
         memberContribution.setName(playerName);
         memberContribution.setRole(playerRole);
-        
+        memberContribution.setLevel(playerLevel);
+
         // Add different types of damage and track counters
         memberContribution.addBossBattle(1000);
         memberContribution.incrementBattleCount();
-        
+
         memberContribution.addBossBomb(500);
         memberContribution.incrementBombCount();
-        
+
         memberContribution.addSidebossBattle(750);
         memberContribution.incrementBattleCount();
-        
+
         memberContribution.addSidebossBomb(300);
         memberContribution.incrementBombCount();
-        
+
         // Verify final state
         assertEquals(playerName, memberContribution.getName());
         assertEquals(playerRole, memberContribution.getRole());
+        assertEquals(playerLevel, memberContribution.getLevel());
         assertEquals(Integer.valueOf(1000), memberContribution.getBossBattle());
         assertEquals(Integer.valueOf(500), memberContribution.getBossBomb());
         assertEquals(Integer.valueOf(750), memberContribution.getSidebossBattle());

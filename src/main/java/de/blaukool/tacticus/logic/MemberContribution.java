@@ -8,6 +8,7 @@ import java.util.List;
 public class MemberContribution {
     String name;
     String role;
+    Integer level;
     Integer bossBattle = 0;
     Integer sidebossBattle = 0;
     Integer bossBomb = 0;
@@ -115,6 +116,15 @@ public class MemberContribution {
     public void incrementBombCount() {
         this.bombCount++;
     }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
 
 
 }

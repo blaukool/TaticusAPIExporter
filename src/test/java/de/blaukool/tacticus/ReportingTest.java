@@ -132,6 +132,7 @@ public class ReportingTest {
         assertEquals(1.0, sheet.getRow(3).getCell(0).getNumericCellValue());
         assertEquals("Player1", sheet.getRow(3).getCell(1).getStringCellValue());
         assertEquals("LEADER", sheet.getRow(3).getCell(2).getStringCellValue());
+        assertEquals("50", sheet.getRow(3).getCell(3).getStringCellValue());
 
         workbook.close();
     }
@@ -338,6 +339,7 @@ public class ReportingTest {
         MemberContribution player1 = new MemberContribution();
         player1.setName("Player1");
         player1.setRole("LEADER");
+        player1.setLevel(50);
         player1.setBossBattle(1000);
         player1.setBossBomb(500);
         player1.setSidebossBattle(750);
@@ -349,6 +351,7 @@ public class ReportingTest {
         MemberContribution player2 = new MemberContribution();
         player2.setName("Player2");
         player2.setRole("OFFICER");
+        player2.setLevel(45);
         player2.setBossBattle(800);
         player2.setBossBomb(600);
         player2.setSidebossBattle(400);

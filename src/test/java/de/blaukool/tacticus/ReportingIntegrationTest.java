@@ -189,20 +189,24 @@ public class ReportingIntegrationTest {
                 String expectedRole = source.getRole() != null ? source.getRole() : "N/A";
                 assertEquals(expectedRole, dataRow.getCell(2).getStringCellValue(), "Role should match");
 
+                // Verify level
+                String expectedLevel = source.getLevel() != null ? source.getLevel().toString() : "N/A";
+                assertEquals(expectedLevel, dataRow.getCell(3).getStringCellValue(), "Level should match");
+
                 // Verify damage values
-                assertEquals(source.getBossBattle(), (int) dataRow.getCell(3).getNumericCellValue(), "Boss Battle should match");
-                assertEquals(source.getBossBomb(), (int) dataRow.getCell(4).getNumericCellValue(), "Boss Bomb should match");
-                assertEquals(source.getSidebossBattle(), (int) dataRow.getCell(5).getNumericCellValue(), "Sideboss Battle should match");
-                assertEquals(source.getSidebossBomb(), (int) dataRow.getCell(6).getNumericCellValue(), "Sideboss Bomb should match");
+                assertEquals(source.getBossBattle(), (int) dataRow.getCell(4).getNumericCellValue(), "Boss Battle should match");
+                assertEquals(source.getBossBomb(), (int) dataRow.getCell(5).getNumericCellValue(), "Boss Bomb should match");
+                assertEquals(source.getSidebossBattle(), (int) dataRow.getCell(6).getNumericCellValue(), "Sideboss Battle should match");
+                assertEquals(source.getSidebossBomb(), (int) dataRow.getCell(7).getNumericCellValue(), "Sideboss Bomb should match");
 
                 // Verify total
                 int expectedTotal = source.getBossBattle() + source.getBossBomb() +
                                   source.getSidebossBattle() + source.getSidebossBomb();
-                assertEquals(expectedTotal, (int) dataRow.getCell(7).getNumericCellValue(), "Total should match");
+                assertEquals(expectedTotal, (int) dataRow.getCell(8).getNumericCellValue(), "Total should match");
 
                 // Verify counts
-                assertEquals(source.getBattleCount(), (int) dataRow.getCell(8).getNumericCellValue(), "Battle count should match");
-                assertEquals(source.getBombCount(), (int) dataRow.getCell(9).getNumericCellValue(), "Bomb count should match");
+                assertEquals(source.getBattleCount(), (int) dataRow.getCell(9).getNumericCellValue(), "Battle count should match");
+                assertEquals(source.getBombCount(), (int) dataRow.getCell(10).getNumericCellValue(), "Bomb count should match");
             }
         }
     }
@@ -236,7 +240,7 @@ public class ReportingIntegrationTest {
             // Test number formatting
             Row dataRow = statisticsSheet.getRow(3); // First data row
             if (dataRow != null) {
-                Cell numberCell = dataRow.getCell(3); // Boss Battle column
+                Cell numberCell = dataRow.getCell(4); // Boss Battle column
                 if (numberCell != null) {
                     CellStyle numberStyle = numberCell.getCellStyle();
                     // The number format should be set (though exact format may vary)
@@ -394,13 +398,14 @@ public class ReportingIntegrationTest {
         assertEquals("Rank", headerRow.getCell(0).getStringCellValue());
         assertEquals("Member Name", headerRow.getCell(1).getStringCellValue());
         assertEquals("Role", headerRow.getCell(2).getStringCellValue());
-        assertEquals("Boss Battle", headerRow.getCell(3).getStringCellValue());
-        assertEquals("Boss Bomb", headerRow.getCell(4).getStringCellValue());
-        assertEquals("Sideb. Battle", headerRow.getCell(5).getStringCellValue());
-        assertEquals("Sideb. Bomb", headerRow.getCell(6).getStringCellValue());
-        assertEquals("Total", headerRow.getCell(7).getStringCellValue());
-        assertEquals("Battles", headerRow.getCell(8).getStringCellValue());
-        assertEquals("Bombs", headerRow.getCell(9).getStringCellValue());
+        assertEquals("Level", headerRow.getCell(3).getStringCellValue());
+        assertEquals("Boss Battle", headerRow.getCell(4).getStringCellValue());
+        assertEquals("Boss Bomb", headerRow.getCell(5).getStringCellValue());
+        assertEquals("Sideb. Battle", headerRow.getCell(6).getStringCellValue());
+        assertEquals("Sideb. Bomb", headerRow.getCell(7).getStringCellValue());
+        assertEquals("Total", headerRow.getCell(8).getStringCellValue());
+        assertEquals("Battles", headerRow.getCell(9).getStringCellValue());
+        assertEquals("Bombs", headerRow.getCell(10).getStringCellValue());
     }
 
     private void validateBossTimelineSheet(Sheet sheet, Integer season) {
@@ -430,10 +435,12 @@ public class ReportingIntegrationTest {
         GuildResponse.GuildMember member1 = new GuildResponse.GuildMember();
         member1.setUserId("user1");
         member1.setRole("LEADER");
+        member1.setLevel(55);
 
         GuildResponse.GuildMember member2 = new GuildResponse.GuildMember();
         member2.setUserId("user2");
         member2.setRole("OFFICER");
+        member2.setLevel(48);
 
         guild.setMembers(Arrays.asList(member1, member2));
         response.setGuild(guild);
@@ -482,6 +489,7 @@ public class ReportingIntegrationTest {
         MemberContribution player1 = new MemberContribution();
         player1.setName("Player1");
         player1.setRole("LEADER");
+        player1.setLevel(55);
         player1.setBossBattle(1000);
         player1.setBossBomb(500);
         player1.setSidebossBattle(750);
@@ -493,6 +501,7 @@ public class ReportingIntegrationTest {
         MemberContribution player2 = new MemberContribution();
         player2.setName("Player2");
         player2.setRole("OFFICER");
+        player2.setLevel(48);
         player2.setBossBattle(800);
         player2.setBossBomb(600);
         player2.setSidebossBattle(400);
@@ -537,6 +546,7 @@ public class ReportingIntegrationTest {
             MemberContribution contribution = new MemberContribution();
             contribution.setName(entry.getValue());
             contribution.setRole(memberRoles.get(entry.getKey()));
+            contribution.setLevel(50); // Default level for test
             contribution.setBossBattle(0);
             contribution.setSidebossBattle(0);
             contribution.setBossBomb(0);

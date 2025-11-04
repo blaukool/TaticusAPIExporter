@@ -50,6 +50,7 @@ public class Reporting {
             // Step 1: Call guild data API and create base member data
             Map<String, String> memberNames = new HashMap<>();
             Map<String, String> memberRoles = new HashMap<>();
+            Map<String, Integer> memberLevel = new HashMap<>();
             List<Integer> guildRaidSeasons = new ArrayList<>();
             String guildName = "";
 
@@ -62,6 +63,7 @@ public class Reporting {
                     for (GuildResponse.GuildMember member : guildResponse.getGuild().getMembers()) {
                         memberNames.put(member.getUserId(), member.getName());
                         memberRoles.put(member.getUserId(), member.getRole());
+                        memberLevel.put(member.getUserId(), member.getLevel());
                     }
                 }
 
@@ -100,6 +102,7 @@ public class Reporting {
                 for (Map.Entry<String, String> entry : memberNames.entrySet()) {
                     MemberContribution contribution = new MemberContribution();
                     contribution.setName(entry.getValue());
+                    contribution.setLevel(memberLevel.get(entry.getKey()));
                     contribution.setRole(memberRoles.get(entry.getKey()));
                     contribution.setBossBattle(0);
                     contribution.setSidebossBattle(0);
@@ -228,7 +231,7 @@ public class Reporting {
 
         // Table header
         Row headerRow = sheet.createRow(rowNum++);
-        String[] headers = {"Rank", "Member Name", "Role", "Boss Battle", "Boss Bomb", "Sideb. Battle", "Sideb. Bomb", "Total", "Battles", "Bombs"};
+        String[] headers = {"Rank", "Member Name", "Role", "Level",  "Boss Battle", "Boss Bomb", "Sideb. Battle", "Sideb. Bomb", "Total", "Battles", "Bombs"};
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -247,31 +250,32 @@ public class Reporting {
                        contribution.getSidebossBattle() + contribution.getSidebossBomb();
 
             dataRow.createCell(0).setCellValue(rank);
-            dataRow.createCell(1).setCellValue(contribution.getName().length() > 15 ? contribution.getName().substring(0, 12) + "..." : contribution.getName());
+            dataRow.createCell(1).setCellValue(contribution.getName());
             dataRow.createCell(2).setCellValue(contribution.getRole() != null ? contribution.getRole() : "N/A");
+            dataRow.createCell(3).setCellValue(contribution.getLevel() != null ? contribution.getLevel().toString() : "N/A");
 
-            Cell bossBattleCell = dataRow.createCell(3);
+            Cell bossBattleCell = dataRow.createCell(4);
             bossBattleCell.setCellValue(contribution.getBossBattle());
             bossBattleCell.setCellStyle(numberStyle);
 
-            Cell bossBombCell = dataRow.createCell(4);
+            Cell bossBombCell = dataRow.createCell(5);
             bossBombCell.setCellValue(contribution.getBossBomb());
             bossBombCell.setCellStyle(numberStyle);
 
-            Cell sidebossBattleCell = dataRow.createCell(5);
+            Cell sidebossBattleCell = dataRow.createCell(6);
             sidebossBattleCell.setCellValue(contribution.getSidebossBattle());
             sidebossBattleCell.setCellStyle(numberStyle);
 
-            Cell sidebossBombCell = dataRow.createCell(6);
+            Cell sidebossBombCell = dataRow.createCell(7);
             sidebossBombCell.setCellValue(contribution.getSidebossBomb());
             sidebossBombCell.setCellStyle(numberStyle);
 
-            Cell totalCell = dataRow.createCell(7);
+            Cell totalCell = dataRow.createCell(8);
             totalCell.setCellValue(total);
             totalCell.setCellStyle(numberStyle);
 
-            dataRow.createCell(8).setCellValue(contribution.getBattleCount());
-            dataRow.createCell(9).setCellValue(contribution.getBombCount());
+            dataRow.createCell(9).setCellValue(contribution.getBattleCount());
+            dataRow.createCell(10).setCellValue(contribution.getBombCount());
 
             // Accumulate totals
             totalBossBattle += contribution.getBossBattle();
@@ -291,32 +295,32 @@ public class Reporting {
         totalLabelCell.setCellValue("TOTAL");
         totalLabelCell.setCellStyle(headerStyle);
         totalRow.createCell(2).setCellValue("");
-
-        Cell totalBossBattleCell = totalRow.createCell(3);
+        totalRow.createCell(3).setCellValue("");
+        Cell totalBossBattleCell = totalRow.createCell(4);
         totalBossBattleCell.setCellValue(totalBossBattle);
         totalBossBattleCell.setCellStyle(numberStyle);
 
-        Cell totalBossBombCell = totalRow.createCell(4);
+        Cell totalBossBombCell = totalRow.createCell(5);
         totalBossBombCell.setCellValue(totalBossBomb);
         totalBossBombCell.setCellStyle(numberStyle);
 
-        Cell totalSidebossBattleCell = totalRow.createCell(5);
+        Cell totalSidebossBattleCell = totalRow.createCell(6);
         totalSidebossBattleCell.setCellValue(totalSidebossBattle);
         totalSidebossBattleCell.setCellStyle(numberStyle);
 
-        Cell totalSidebossBombCell = totalRow.createCell(6);
+        Cell totalSidebossBombCell = totalRow.createCell(7);
         totalSidebossBombCell.setCellValue(totalSidebossBomb);
         totalSidebossBombCell.setCellStyle(numberStyle);
 
-        Cell grandTotalCell = totalRow.createCell(7);
+        Cell grandTotalCell = totalRow.createCell(8);
         grandTotalCell.setCellValue(totalBossBattle + totalBossBomb + totalSidebossBattle + totalSidebossBomb);
         grandTotalCell.setCellStyle(numberStyle);
 
-        totalRow.createCell(8).setCellValue(totalBattles);
-        totalRow.createCell(9).setCellValue(totalBombs);
+        totalRow.createCell(9).setCellValue(totalBattles);
+        totalRow.createCell(10).setCellValue(totalBombs);
 
         // Auto-size columns
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             sheet.autoSizeColumn(i);
         }
     }

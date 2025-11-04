@@ -234,20 +234,22 @@ public class MainTest {
 
     @Test
     public void testMemberContributionInitializationWithAllFields() {
-        // Test that all fields are properly initialized including role
-        de.blaukool.tacticus.logic.MemberContribution contribution = 
+        // Test that all fields are properly initialized including role and level
+        de.blaukool.tacticus.logic.MemberContribution contribution =
             new de.blaukool.tacticus.logic.MemberContribution();
         contribution.setName("TestUser");
         contribution.setRole("MEMBER");
+        contribution.setLevel(75);
         contribution.setBossBattle(0);
         contribution.setSidebossBattle(0);
         contribution.setBossBomb(0);
         contribution.setSidebossBomb(0);
         contribution.setBattleCount(0);
         contribution.setBombCount(0);
-        
+
         assertEquals("TestUser", contribution.getName());
         assertEquals("MEMBER", contribution.getRole());
+        assertEquals(Integer.valueOf(75), contribution.getLevel());
         assertEquals(Integer.valueOf(0), contribution.getBossBattle());
         assertEquals(Integer.valueOf(0), contribution.getSidebossBattle());
         assertEquals(Integer.valueOf(0), contribution.getBossBomb());
@@ -272,10 +274,11 @@ public class MainTest {
         mockRaidResponse.setEntries(Arrays.asList(raids));
         
         // Simulate the damage processing logic from Main
-        de.blaukool.tacticus.logic.MemberContribution contribution = 
+        de.blaukool.tacticus.logic.MemberContribution contribution =
             new de.blaukool.tacticus.logic.MemberContribution();
         contribution.setName("TestPlayer");
         contribution.setRole("OFFICER");
+        contribution.setLevel(60);
         contribution.setBossBattle(0);
         contribution.setSidebossBattle(0);
         contribution.setBossBomb(0);
@@ -306,6 +309,7 @@ public class MainTest {
         // Verify the final state matches expected values
         assertEquals("TestPlayer", contribution.getName());
         assertEquals("OFFICER", contribution.getRole());
+        assertEquals(Integer.valueOf(60), contribution.getLevel());
         assertEquals(Integer.valueOf(1000), contribution.getBossBattle());
         assertEquals(Integer.valueOf(1500), contribution.getBossBomb());
         assertEquals(Integer.valueOf(800), contribution.getSidebossBattle());
@@ -344,29 +348,47 @@ public class MainTest {
         GuildResponse.GuildMember leader = new GuildResponse.GuildMember();
         leader.setUserId("leader-id");
         leader.setRole("LEADER");
-        
+        leader.setLevel(95);
+
         GuildResponse.GuildMember officer = new GuildResponse.GuildMember();
         officer.setUserId("officer-id");
         officer.setRole("OFFICER");
-        
+        officer.setLevel(85);
+
         GuildResponse.GuildMember member = new GuildResponse.GuildMember();
         member.setUserId("member-id");
         member.setRole("MEMBER");
+        member.setLevel(75);
         
         // Verify role extraction
         assertEquals("LEADER", leader.getRole());
         assertEquals("OFFICER", officer.getRole());
         assertEquals("MEMBER", member.getRole());
-        
+
+        // Verify level extraction
+        assertEquals(Integer.valueOf(95), leader.getLevel());
+        assertEquals(Integer.valueOf(85), officer.getLevel());
+        assertEquals(Integer.valueOf(75), member.getLevel());
+
         // Verify that roles would be stored correctly in maps
         Map<String, String> memberRoles = new HashMap<>();
         memberRoles.put(leader.getUserId(), leader.getRole());
         memberRoles.put(officer.getUserId(), officer.getRole());
         memberRoles.put(member.getUserId(), member.getRole());
-        
+
+        // Verify that levels would be stored correctly in maps
+        Map<String, Integer> memberLevels = new HashMap<>();
+        memberLevels.put(leader.getUserId(), leader.getLevel());
+        memberLevels.put(officer.getUserId(), officer.getLevel());
+        memberLevels.put(member.getUserId(), member.getLevel());
+
         assertEquals("LEADER", memberRoles.get("leader-id"));
         assertEquals("OFFICER", memberRoles.get("officer-id"));
         assertEquals("MEMBER", memberRoles.get("member-id"));
+
+        assertEquals(Integer.valueOf(95), memberLevels.get("leader-id"));
+        assertEquals(Integer.valueOf(85), memberLevels.get("officer-id"));
+        assertEquals(Integer.valueOf(75), memberLevels.get("member-id"));
     }
 
     // Helper method to create raid entries
