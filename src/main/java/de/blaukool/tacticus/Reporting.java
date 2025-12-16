@@ -165,10 +165,10 @@ public class Reporting {
                         UserIDTranslator translator = new UserIDTranslator();
                         Map<String, Boss> bossMap = new HashMap<>();
                         for (GuildRaidResponse.Raid raid : guildRaidResponse.getEntries()) {
-                            Boss thisBoss = bossMap.get(raid.getRarity() + raid.getType());
+                            Boss thisBoss = bossMap.get(raid.getRarity() + raid.getType() + raid.getTier());
                             if (thisBoss == null) {
-                                thisBoss = new Boss(raid.getType(), raid.getSet() + 1, raid.getRarity());
-                                bossMap.put(raid.getRarity() + raid.getType(), thisBoss);
+                                thisBoss = new Boss(raid.getType(), raid.getSet() + 1, raid.getRarity(), raid.getTier());
+                                bossMap.put(raid.getRarity() + raid.getType() + raid.getTier(), thisBoss);
                             }
                             Attack thisAttack = new Attack(translator.getUserName(raid.getUserId()), raid.getDamageDealt(), raid.getRemainingHp());
                             if ("SideBoss".equals(raid.getEncounterType())) {
@@ -340,7 +340,7 @@ public class Reporting {
             // Boss header
             Row bossHeaderRow = sheet.createRow(rowNum++);
             Cell bossHeaderCell = bossHeaderRow.createCell(0);
-            bossHeaderCell.setCellValue(boss.getRarity() + " " +  boss.getName());
+            bossHeaderCell.setCellValue(boss.getRarity() + " " +  boss.getName() + " Tier: " +boss.getTier());
             bossHeaderCell.setCellStyle(headerStyle);
 
             // Boss attacks header

@@ -8,6 +8,7 @@ public class Boss implements Comparable<Boss>{
     private List<Sideboss> sideboss = new ArrayList<>();
     private String rarity;
     private int number;
+    private int tier;
 
     static private final Map<String, Integer> RARITIES = new HashMap<>();
     static {
@@ -19,10 +20,19 @@ public class Boss implements Comparable<Boss>{
         RARITIES.put("Mythic", 6);
     }
 
-    public Boss(String name, int number, String rarity) {
+    public Boss(String name, int number, String rarity, int tier) {
         this.name = name;
         this.number = number;
         this.rarity = rarity;
+        this.tier = tier;
+    }
+
+    public int getTier() {
+        return tier;
+    }
+
+    public void setTier(int tier) {
+        this.tier = tier;
     }
 
     public String getName() {
@@ -78,8 +88,8 @@ public class Boss implements Comparable<Boss>{
 
     @Override
     public int compareTo(Boss o) {
-        int rare = Integer.compare(RARITIES.get(this.rarity), RARITIES.get(o.rarity));
-        if (rare != 0) return rare;
+        int tier = Integer.compare(this.tier, o.tier);
+        if (tier != 0) return tier;
         return Integer.compare(this.number, o.number);
     }
 }

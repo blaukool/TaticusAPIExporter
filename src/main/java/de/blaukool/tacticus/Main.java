@@ -200,10 +200,10 @@ public class Main {
                         UserIDTranslator translator = new UserIDTranslator();
                         Map<String, Boss> bosses = new HashMap<>();
                         for (GuildRaidResponse.Raid raid : guildRaidResponse.getEntries()) {
-                            Boss thisBoss = bosses.get(raid.getRarity() + raid.getType());
+                            Boss thisBoss = bosses.get(raid.getRarity() + raid.getType() + raid.getTier());
                             if (thisBoss == null) {
-                                thisBoss = new Boss(raid.getType(),raid.getSet()+1,raid.getRarity());
-                                bosses.put(raid.getRarity() + raid.getType(), thisBoss);
+                                thisBoss = new Boss(raid.getType(),raid.getSet()+1,raid.getRarity(), raid.getTier());
+                                bosses.put(raid.getRarity() + raid.getType() + raid.getTier(), thisBoss);
                             }
                             Attack thisAttack = new Attack(translator.getUserName(raid.getUserId()),raid.getDamageDealt(), raid.getRemainingHp());
                             if("SideBoss".equals(raid.getEncounterType())) {
