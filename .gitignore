@@ -40,3 +40,6 @@ build/
 /.mvn/
 /.idea/
 src/main/resources/userMapping.properties
+
+*.xlsx
+/.archive/
